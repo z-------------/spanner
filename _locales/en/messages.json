@@ -1,0 +1,21 @@
+{
+    "extensionName": {
+        "message": "spanner",
+        "description": "Name of the extension."
+    },
+
+    "extensionDescription": {
+        "message": "Freely pan each tab's playing audio.",
+        "description": "Description of the extension."
+    },
+
+    "labelControlToggle": {
+        "message": "Toggle",
+        "description": "Label for the toggle control in the extension popup."
+    },
+
+    "labelControlPan": {
+        "message": "Pan",
+        "description": "Label for the pan control in the extension popup."
+    }
+}

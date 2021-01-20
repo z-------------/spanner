@@ -1,0 +1,24 @@
+{
+    "manifest_version": 2,
+    
+    "name": "__MSG_extensionName__",
+    "description": "__MSG_extensionDescription__",
+    "version": "0.0.0",
+
+    "default_locale": "en",
+
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": [
+                "common/i18n.js",
+                "content/content.js"
+            ]
+        }
+    ],
+    
+    "browser_action": {
+        "browser_style": true,
+        "default_popup": "popup/popup.html"
+    }
+}
