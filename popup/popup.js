@@ -1,7 +1,5 @@
 "use strict";
 
-console.log("popup.js loaded.");
-
 async function getCurrentTabId() {
     const m = await browser.tabs.query({ active: true, currentWindow: true });
     return m[0].id;
