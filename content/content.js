@@ -89,7 +89,7 @@ browser.runtime.onMessage.addListener(([cmd, arg], sender, sendResponse) => {
         [cmd, false];
     if (!state.hasOwnProperty(key)) {
         const verb = isQuery ? "get" : "set";
-        return sendResponse(new Error(`Cannot ${verb} nonexistence state key '${key}'.`));
+        return sendResponse(new Error(`Cannot ${verb} nonexistent state key '${key}'.`));
     }
 
     if (isQuery) {
