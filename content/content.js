@@ -69,7 +69,7 @@ addStateListener("toggle", toggle => {
             enablePan(elem);
         }
     } else { // on -> off
-        for (const elem of trackMap.keys()) {
+        for (const elem of mapping.keys()) {
             disablePan(elem);
         }
     }
