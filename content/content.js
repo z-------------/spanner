@@ -3,28 +3,27 @@
 /* audio globals */
 
 const audioContext = new AudioContext();
-const pannerMap = new Map();
-const trackMap = new Map();
+const mapping = new Map();
 
 /* audio processing */
 
 function enablePan(elem) {
     // set things up if this is a new element
-    if (!trackMap.has(elem)) {
-        trackMap.set(elem, audioContext.createMediaElementSource(elem));
-    }
-    if (!pannerMap.has(elem)) {
-        pannerMap.set(elem, new StereoPannerNode(audioContext));
+    if (!mapping.has(elem)) {
+        const panner = new StereoPannerNode(audioContext);
+        mapping.set(elem, {
+            track: audioContext.createMediaElementSource(elem),
+            panner,
+            setPan: pan => panner.pan.value = pan,
+        });
     }
 
-    const panner = pannerMap.get(elem);
-    const track = trackMap.get(elem);
+    const { track, panner } = mapping.get(elem);
     track.connect(panner).connect(audioContext.destination);
 }
 
 function disablePan(elem) {
-    const panner = pannerMap.get(elem);
-    const track = trackMap.get(elem);
+    const { track, panner } = mapping.get(elem);
     track.disconnect(panner);
     track.connect(audioContext.destination);
 }
@@ -77,8 +76,8 @@ addStateListener("toggle", toggle => {
 });
 
 addStateListener("pan", pan => {
-    for (const [, panner] of pannerMap.entries()) {
-        panner.pan.value = pan;
+    for (const [, { setPan }] of mapping.entries()) {
+        setPan(pan);
     }
 })
 
