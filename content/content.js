@@ -35,24 +35,22 @@ const state = {
     pan: 0,
 };
 
-const [handleStateChange, addStateListener] = (() => {
+const [setState, addStateListener] = (() => {
     const keys = Object.keys(state);
 
-    const prevState = {};
     const listeners = {};
     for (const key of keys) {
-        prevState[key] = null;
         listeners[key] = [];
     }
 
     const result = [];
-    result.push((key) => {
-        if (state[key] !== prevState[key]) {
+    result.push((key, value) => {
+        if (value !== state[key]) {
             for (const listener of listeners[key]) {
-                listener(state[key]);
+                listener(value);
             }
         }
-        prevState[key] = state[key];
+        state[key] = value;
     });
     result.push((key, listener) => {
         listeners[key].push(listener);
@@ -95,7 +93,6 @@ browser.runtime.onMessage.addListener(([cmd, arg], sender, sendResponse) => {
     if (isQuery) {
         sendResponse(state[key]);
     } else {
-        state[key] = arg;
-        handleStateChange(key);
+        setState(key, arg);
     }
 });
