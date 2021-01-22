@@ -76,7 +76,7 @@ addStateListener("toggle", toggle => {
 });
 
 addStateListener("pan", pan => {
-    for (const [, { setPan }] of mapping.entries()) {
+    for (const { setPan } of mapping.values()) {
         setPan(pan);
     }
 })
