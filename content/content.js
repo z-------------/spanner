@@ -6,6 +6,29 @@ const audioContext = new AudioContext();
 const pannerMap = new Map();
 const trackMap = new Map();
 
+/* audio processing */
+
+function enablePan(elem) {
+    // set things up if this is a new element
+    if (!trackMap.has(elem)) {
+        trackMap.set(elem, audioContext.createMediaElementSource(elem));
+    }
+    if (!pannerMap.has(elem)) {
+        pannerMap.set(elem, new StereoPannerNode(audioContext));
+    }
+
+    const panner = pannerMap.get(elem);
+    const track = trackMap.get(elem);
+    track.connect(panner).connect(audioContext.destination);
+}
+
+function disablePan(elem) {
+    const panner = pannerMap.get(elem);
+    const track = trackMap.get(elem);
+    track.disconnect(panner);
+    track.connect(audioContext.destination);
+}
+
 /* state apparatus */
 
 const state = {
@@ -42,26 +65,13 @@ const [handleStateChange, addStateListener] = (() => {
 
 addStateListener("toggle", toggle => {
     if (toggle) { // off -> on
-        // see if there are any new media elements
-        const allMediaElems = document.querySelectorAll("audio, video");
-        for (const elem of allMediaElems) {
-            if (!trackMap.has(elem)) {
-                trackMap.set(elem, audioContext.createMediaElementSource(elem));
-            }
-            if (!pannerMap.has(elem)) {
-                pannerMap.set(elem, new StereoPannerNode(audioContext));
-            }
-        }
-
-        for (const [elem, track] of trackMap.entries()) {
-            const panner = pannerMap.get(elem);
-            track.connect(panner).connect(audioContext.destination);
+        const mediaElems = document.querySelectorAll("audio, video");
+        for (const elem of mediaElems) {
+            enablePan(elem);
         }
     } else { // on -> off
-        for (const [elem, track] of trackMap.entries()) {
-            const panner = pannerMap.get(elem);
-            track.disconnect(panner);
-            track.connect(audioContext.destination);
+        for (const elem of trackMap.keys()) {
+            disablePan(elem);
         }
     }
 });
